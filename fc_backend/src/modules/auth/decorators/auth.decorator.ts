@@ -9,7 +9,7 @@ export function AuthGuard(): <T extends () => void, Y>(
     propertyKey?: string | symbol,
     descriptor?: TypedPropertyDescriptor<Y>,
 ) => void {
-    return applyDecorators(UseGuards(JwtAuthGuard), ApiBearerAuth('Authorization'));
+    return applyDecorators(ApiBearerAuth('Authorization'), UseGuards(JwtAuthGuard));
 }
 
 export const CurrentUser = createParamDecorator((_, context: ExecutionContext) => {

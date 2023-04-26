@@ -39,7 +39,7 @@ function bootstrapSwagger(app: any, restPath: string) {
                 scheme: 'bearer',
                 type: 'http',
             },
-            'Authorizartion',
+            'Authorization',
         )
         .build();
     const document = SwaggerModule.createDocument(app, config);
