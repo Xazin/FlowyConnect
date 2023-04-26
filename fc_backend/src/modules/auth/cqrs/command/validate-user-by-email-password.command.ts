@@ -5,6 +5,8 @@ import { FindUserByEmailQuery } from '../query';
 import { User } from '@domain/user';
 import { JwtService } from '@nestjs/jwt';
 
+export const MONTH_IN_SECONDS = 2678400;
+
 export interface IValidateUserByEmailPasswordArgs {
     email: string;
     password: string;
@@ -29,7 +31,7 @@ export class ValidateUserByEmailPasswordCommand implements ICommand<IValidateUse
         const payload = { name: user.name, sub: user.id };
 
         return {
-            access_token: this.jwtService.sign(payload),
+            accessToken: this.jwtService.sign(payload),
         };
     }
 }

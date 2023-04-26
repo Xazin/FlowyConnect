@@ -1,10 +1,11 @@
 import { ICQRSHandler } from '@common/cqrs';
+import { Identifiable } from '@domain/core/entity';
 import { User } from '@domain/user';
-import { UserRegistrationDto } from '@infrastructure/auth/dto/user-registration.dto';
+import { TokenResponse, UserLoginDto, UserRegistrationDto } from '@infrastructure/auth';
 import { CreateUserCommand, FindUserByIdQuery, LocalAuthGuard } from '@modules/auth';
 import { AuthGuard, CurrentUser } from '@modules/auth';
 import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller()
 @ApiTags('Authentication')
@@ -13,22 +14,23 @@ export class AuthController {
 
     @UseGuards(LocalAuthGuard)
     @Post('v1/auth/login')
-    @ApiParam({ name: 'password', required: true })
-    @ApiParam({ name: 'email', required: true })
+    @ApiBody({ type: UserLoginDto, description: 'Login with email and password' })
+    @ApiResponse({ type: TokenResponse })
     async login(@Request() req) {
         return req.user;
     }
 
     @Post('v1/auth/register')
     @ApiBody({ type: UserRegistrationDto, description: 'Registers a new user' })
-    async register(@Body() registrationDto: UserRegistrationDto): Promise<any> {
+    @ApiResponse({ type: Identifiable })
+    async register(@Body() registrationDto: UserRegistrationDto): Promise<Identifiable> {
         return await this.cqrsHandler.execute(CreateUserCommand, registrationDto);
     }
 
     /// TODO: Move to profile controller
     @Get('v1/auth/profile')
     @AuthGuard()
-    getProfile(@CurrentUser() user: User): Promise<any> {
+    async getProfile(@CurrentUser() user: User): Promise<any> {
         return this.cqrsHandler.fetch(FindUserByIdQuery, user.id);
     }
 }

@@ -12,7 +12,7 @@ export function AuthGuard(): <T extends () => void, Y>(
     return applyDecorators(UseGuards(JwtAuthGuard), ApiBearerAuth('Authorization'));
 }
 
-export const CurrentUser = createParamDecorator((data, context: ExecutionContext) => {
+export const CurrentUser = createParamDecorator((_, context: ExecutionContext) => {
     const request = context.switchToHttp().getRequest();
     return request.user;
 });
