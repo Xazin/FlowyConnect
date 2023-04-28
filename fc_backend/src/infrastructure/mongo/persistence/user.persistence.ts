@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 
 export type UserDocument = UserPersistence & Document;
 @Schema({ collection: 'users', autoCreate: true, versionKey: false, timestamps: true })
-export class UserPersistence implements Omit<User, 'id' | 'createdAt' | 'updatedAt'> {
+export class UserPersistence implements Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'toDto'> {
     @Prop({ required: true })
     name: string;
 

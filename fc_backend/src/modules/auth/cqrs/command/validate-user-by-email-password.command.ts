@@ -30,8 +30,13 @@ export class ValidateUserByEmailPasswordCommand implements ICommand<IValidateUse
     async login(user: User) {
         const payload = { name: user.name, sub: user.id };
 
+        const accessToken = this.jwtService.sign(payload, { expiresIn: MONTH_IN_SECONDS });
+        const { exp, iat }: any = this.jwtService.decode(accessToken);
+
         return {
-            accessToken: this.jwtService.sign(payload),
+            accessToken,
+            activeSince: iat,
+            expires: exp,
         };
     }
 }

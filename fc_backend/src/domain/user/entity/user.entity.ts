@@ -24,4 +24,8 @@ export class User implements IUser {
     static create(entityLike: IUser): User {
         return new User(entityLike);
     }
+
+    toDto() {
+        return { id: this.id, name: this.name, createdAt: this.createdAt };
+    }
 }
